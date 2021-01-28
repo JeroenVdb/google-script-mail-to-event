@@ -1,0 +1,22 @@
+{
+  "timeZone": "Europe/Brussels",
+  "dependencies": {
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "addOns": {
+    "common": {
+      "name": "Emvent",
+      "logoUrl": "https://developers.google.com/site-assets/developers_64dp.png",
+      "homepageTrigger": {
+        "runFunction": "homePage"
+      }
+    },
+    "gmail": {}
+  },
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/gmail.addons.current.message.readonly",
+    "https://www.googleapis.com/auth/gmail.addons.execute",
+    "https://www.googleapis.com/auth/calendar"
+  ]
+}
