@@ -12,7 +12,14 @@
         "runFunction": "homePage"
       }
     },
-    "gmail": {}
+    "gmail": {
+      "contextualTriggers": [
+        {
+          "unconditional": {},
+          "onTriggerFunction": "onGmailMessageOpen"
+        }
+      ]
+    }
   },
   "oauthScopes": [
     "https://www.googleapis.com/auth/gmail.addons.current.message.readonly",
