@@ -24,12 +24,21 @@ function onFindAndShowEvents(e) {
 	return findAndShowEvents(e.messageMetadata.messageId);
 }
 
+/**
+ *
+ * @param messageId
+ * @returns {GoogleAppsScript.Card_Service.Card}
+ */
 function findAndShowEvents(messageId) {
 	var mailMessage = GmailApp.getMessageById(messageId);
 	var events = getEventsFromText(mailMessage.getPlainBody());
 	return homePage(events, mailMessage.getSubject())
 }
 
+/**
+ *
+ * @param accessToken
+ */
 function authorizeGmailApp(accessToken) {
 	GmailApp.setCurrentMessageAccessToken(accessToken);
 }
@@ -62,14 +71,7 @@ function findDates(str) {
 
 function toEvent(date) {
 	console.log(`toEvent: convert chrono ParsingResult to normalized event: ${JSON.stringify(date)}`)
-	return {
-		'originalDate': date.text,
-		'from': {
-			'year': date.start.knownValues.year ? date.start.knownValues.year.toString() : date.start.impliedValues.year.toString(),
-			'month': date.start.knownValues.month ? date.start.knownValues.month.toString() : date.start.impliedValues.month.toString(),
-			'day': date.start.knownValues.day ? date.start.knownValues.day.toString() : date.start.impliedValues.day.toString()
-		}
-	}
+	return Event.fromChronoParsingResult(date)
 }
 
 function addToCalendarCallback(actionInput) {
@@ -83,4 +85,22 @@ function notificationCallback() {
 		.setNotification(CardService.newNotification()
 		.setText("Event created"))
 		.build();
+}
+
+class Event {
+	constructor(text, fromYear, fromMonth, fromDay) {
+		this.originalDate = text;
+		this.fromYear = fromYear;
+		this.fromMonth = fromMonth;
+		this.fromDay = fromDay;
+	}
+
+	static fromChronoParsingResult(chronoParsingResult) {
+		return new this(
+			chronoParsingResult.text,
+			chronoParsingResult.start.knownValues.year ? chronoParsingResult.start.knownValues.year.toString() : chronoParsingResult.start.impliedValues.year.toString(),
+			chronoParsingResult.start.knownValues.month ? chronoParsingResult.start.knownValues.month.toString() : chronoParsingResult.start.impliedValues.month.toString(),
+			chronoParsingResult.start.knownValues.day ? chronoParsingResult.start.knownValues.day.toString() : chronoParsingResult.start.impliedValues.day.toString()
+		);
+	}
 }
